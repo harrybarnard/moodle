@@ -241,6 +241,12 @@
     }
 
     $PAGE->set_heading($course->fullname);
+
+    // Trigger course viewed event.
+    // We don't trust $context here. Course format inclusion above executes in the global space. We can't assume
+    // anything after that point.
+    course_view(context_course::instance($course->id), $section);
+
     echo $OUTPUT->header();
 
     if ($completion->is_enabled()) {
@@ -281,11 +287,6 @@
     // Content wrapper end.
 
     echo html_writer::end_tag('div');
-
-    // Trigger course viewed event.
-    // We don't trust $context here. Course format inclusion above executes in the global space. We can't assume
-    // anything after that point.
-    course_view(context_course::instance($course->id), $section);
 
     // Include course AJAX
     include_course_ajax($course, $modnamesused);
